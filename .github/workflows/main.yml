@@ -42,11 +42,6 @@ jobs:
       - name: Ensure report directory exists
         run: mkdir -p cypress/reports/${{ matrix.browser }}
 
-      # Generate HTML Reports
-      - name: Generate HTML Reports
-        run: |
-          npx marge cypress/reports/${{ matrix.browser }}/merged-reports.json --reportDir cypress/reports/${{ matrix.browser }} -f "${{ matrix.browser }}-report.html"
-
       # Upload HTML Reports as artifacts
       - name: Upload HTML Reports
         uses: actions/upload-artifact@v4
