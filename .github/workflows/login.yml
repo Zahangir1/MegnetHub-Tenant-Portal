@@ -11,7 +11,7 @@ jobs:
     strategy:
         fail-fast: false
         matrix: 
-            browsers: [chrome, firefox, edge]
+          browsers: [chrome, firefox, edge]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,13 +21,13 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
             browsers: ${{ matrix.browsers }}
-            command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir="cypress/results/${{ matrix.browsers }}
+            command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/results/${{ matrix.browsers }}
       
-      - name: Marge Mochawesome Reports
+      - name: Merge Mochawesome Reports
         run: npx mochawesome-merge cypress/reports/${{ matrix.browsers }}/*.json > cypress/reports/${{ matrix.browsers }}/merged-reports.json
 
       - name: Generate HTML Reports
-        run: npx marge cypress/reports/${{ matrix.browsers }}/merged-reports.json --reportDir cypress/report/${{ matrix.browsers }} -f "${{ matrix.browsers }}-report.html"
+        run: npx marge cypress/reports/${{ matrix.browsers }}/merged-reports.json --reportDir cypress/reports/${{ matrix.browsers }} -f "${{ matrix.browsers }}-report.html"
 
       - name: Upload HTML Reports
         uses: actions/upload-artifact@v4
