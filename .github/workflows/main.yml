@@ -36,7 +36,11 @@ jobs:
       - name: Run Login Test in ${{ matrix.browser }}
         uses: cypress-io/github-action@v6
         with:
-          browser: ${{ matrix.browser }} # This alone will choose the browser
+          browser: ${{ matrix.browser }}
+
+      # Ensure the directory exists before merging the reports
+      - name: Ensure report directory exists
+        run: mkdir -p cypress/reports/${{ matrix.browser }}
 
       # Merge Mochawesome Reports
       - name: Merge Mochawesome Reports
