@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  login_test:
+  cypress_run:
     runs-on: ubuntu-24.04
 
     strategy:
