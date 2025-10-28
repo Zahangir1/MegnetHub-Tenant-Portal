@@ -1,23 +1,45 @@
-const { defineConfig } = require("cypress");
+// const { defineConfig } = require("cypress");
+
+// module.exports = defineConfig({
+//   //retries: 1,
+//   screenshot:true,
+//   video:true,
+//   videoCompression: true,
+  
+//   reporter: 'cypress-mochawesome-reporter',
+
+//   e2e: {
+//     setupNodeEvents(on, config) {
+
+//     },
+//   },
+
+//   env: {
+//     loginUrl: "https://magnethub.selisestage.com"
+//   }
+
+// });
+
+
+const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  //retries: 1,
-  screenshot:true,
-  video:true,
-  videoCompression: true,
-  
-  reporter: 'cypress-mochawesome-reporter',
-
   e2e: {
-    //baseUrl: "https://magnethub.selisestage.com",
     setupNodeEvents(on, config) {
-      require('cypress-mochawesome-reporter/plugin')(on);
+      // implement node event listeners here
 
     },
+  },
+  reporter: 'mochawesome',
+  reporterOptions: {
+    reportDir: 'cypress/results',
+    overwrite: false,
+    html: false,
+    json: true,
   },
 
   env: {
     loginUrl: "https://magnethub.selisestage.com"
   }
 
-});
+})
