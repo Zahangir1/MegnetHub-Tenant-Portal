@@ -42,11 +42,6 @@ jobs:
       - name: Ensure report directory exists
         run: mkdir -p cypress/reports/${{ matrix.browser }}
 
-      # Merge Mochawesome Reports
-      - name: Merge Mochawesome Reports
-        run: |
-          npx mochawesome-merge cypress/results/${{ matrix.browser }}/*.json > cypress/reports/${{ matrix.browser }}/merged-reports.json
-
       # Generate HTML Reports
       - name: Generate HTML Reports
         run: |
