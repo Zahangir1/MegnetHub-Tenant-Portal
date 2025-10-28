@@ -32,29 +32,15 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-      # Ensure results directory exists
-      - name: Ensure results directory exists
-        run: mkdir -p cypress/results/${{ matrix.browser }}
-
       # Run Login Test in each browser in the matrix
       - name: Run Login Test in ${{ matrix.browser }}
         uses: cypress-io/github-action@v6
         with:
           browser: ${{ matrix.browser }}
 
-      # List the files to debug if reports exist
-      - name: List report files
-        run: ls -la cypress/results/${{ matrix.browser }}
-
-      # Check if Mochawesome reports exist
-      - name: Check for Mochawesome reports
-        run: |
-          if ls cypress/results/${{ matrix.browser }}/*.json 1> /dev/null 2>&1; then
-            echo "Reports found, proceeding with merging...";
-          else
-            echo "No reports found for ${{ matrix.browser }}. Skipping report merge.";
-            exit 0;
-          fi
+      # Ensure the directory exists before merging the reports
+      - name: Ensure report directory exists
+        run: mkdir -p cypress/reports/${{ matrix.browser }}
 
       # Merge Mochawesome Reports
       - name: Merge Mochawesome Reports
