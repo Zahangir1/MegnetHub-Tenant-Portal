@@ -1,17 +1,57 @@
-name: Chrome
-on: push
+name: Login Test for All Browsers
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 jobs:
-  cypress-run:
-    runs-on: ubuntu-latest
+  login_test:
+    runs-on: ubuntu-24.04
+
     strategy:
+      fail-fast: false
       matrix:
-        browser: [chrome, firefox]
+        browser: [chrome, firefox, edge]
+
     steps:
-      - name: Checkout
+      # Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Cypress tests
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Install npm dependencies
+      - name: Install npm dependencies
+        run: npm ci
+
+      # Run Login Test in each browser in the matrix
+      - name: Run Login Test in ${{ matrix.browser }}
         uses: cypress-io/github-action@v6
         with:
           browser: ${{ matrix.browser }}
-          record: true
+          command: npx cypress run --browser ${{ matrix.browser }} --reporter mochawesome --reporter-options reportDir=cypress/results/${{ matrix.browser }}
+
+      # Merge Mochawesome Reports
+      - name: Merge Mochawesome Reports
+        run: |
+          npx mochawesome-merge cypress/results/${{ matrix.browser }}/*.json > cypress/reports/${{ matrix.browser }}/merged-reports.json
+
+      # Generate HTML Reports
+      - name: Generate HTML Reports
+        run: |
+          npx marge cypress/reports/${{ matrix.browser }}/merged-reports.json --reportDir cypress/reports/${{ matrix.browser }} -f "${{ matrix.browser }}-report.html"
+
+      # Upload HTML Reports as artifacts
+      - name: Upload HTML Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cypress HTML Report ${{ matrix.browser }}
+          path: cypress/reports/${{ matrix.browser }}/*.html
