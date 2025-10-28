@@ -1,0 +1,20 @@
+{
+  "name": "megnethub-tenant-portal---stage-env",
+  "version": "1.0.0",
+  "description": "",
+  "bugs": {},
+  "repository": {
+    "type": "git"
+  },
+  "license": "ISC",
+  "author": "Zahangir",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "Test"
+  },
+  "devDependencies": {
+    "cypress": "^15.5.0",
+    "cypress-mochawesome-reporter": "^4.0.2"
+  }
+}
