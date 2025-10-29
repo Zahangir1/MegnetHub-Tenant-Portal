@@ -1,4 +1,4 @@
-name: Login Test for All Browsers
+name: Test Suite for All Browsers
 
 on:
   push:

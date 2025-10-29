@@ -1,12 +1,3 @@
-import { loginPage } from '../../pages/login/loginPage'
-const loginObj = new loginPage()
-import loginData from '../../fixtures/loginData.json'
-
-import { dashboardManagementPage } from '../../pages/dashboardManagement/dashboardManagementPage'
-const dashboardObj = new dashboardManagementPage()
-import dashboardManagementData from '../../fixtures/dashboardManagementData.json'
-
-
 describe('Execuation the Dashboard Management', () =>{
     before('Visit Application', () =>{
         loginObj.loginURL()
@@ -63,3 +54,12 @@ describe('Execuation the Dashboard Management', () =>{
     */
 
 })
+
+
+import { loginPage } from '../../pages/login/loginPage'
+const loginObj = new loginPage()
+import loginData from '../../fixtures/loginData.json'
+
+import { dashboardManagementPage } from '../../pages/dashboardManagement/dashboardManagementPage'
+const dashboardObj = new dashboardManagementPage()
+import dashboardManagementData from '../../fixtures/dashboardManagementData.json'

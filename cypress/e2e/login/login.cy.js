@@ -1,9 +1,3 @@
-import { loginPage } from '../../pages/login/loginPage'
-const loginObj = new loginPage() 
-import loginData from '../../fixtures/loginData.json'
-
-
-
 describe('Verify user login credential', () =>{
     it('TC_Login: Verify that as a user I can login successfully with valid username and password.', ()=>{
             loginObj.loginURL()
@@ -15,3 +9,8 @@ describe('Verify user login credential', () =>{
         })   
 
 })
+
+
+import { loginPage } from '../../pages/login/loginPage'
+const loginObj = new loginPage() 
+import loginData from '../../fixtures/loginData.json'
