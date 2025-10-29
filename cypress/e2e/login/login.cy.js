@@ -1,6 +1,7 @@
 import { loginPage } from '../../pages/login/loginPage'
-import loginData from '../../fixtures/loginData.json'
 const loginObj = new loginPage() 
+import loginData from '../../fixtures/loginData.json'
+
 
 
 describe('Verify user login credential', () =>{
