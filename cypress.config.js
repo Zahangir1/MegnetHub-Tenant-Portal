@@ -2,10 +2,10 @@
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  screenshot:true,
-  video:true,
-  videoCompression: true,
-  reporter: 'cypress-mochawesome-reporter',
+  // screenshot:true,
+  // video:true,
+  // videoCompression: true,
+  // reporter: 'cypress-mochawesome-reporter',
 
   e2e: {
     setupNodeEvents(on, config) {
