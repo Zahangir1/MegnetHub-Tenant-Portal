@@ -1,17 +1,13 @@
-describe('Execuation the Dashboard Management', () =>{
-    before('Visit Application', () =>{
+describe('Verify Dashboard Management page load & Dashboard Export Functionality', () =>{
+    beforeEach('Login Credentials', () =>{
         loginObj.loginURL()
         cy.viewport(1440,900)
-        cy.log('Application Launched')
-    })
-
-    beforeEach('Login Credentials', () =>{
         loginObj.enterCredentials(loginData.email, loginData.password)
         cy.log('User logged in successfully')
         cy.wait(3000)
     })
 
-    it('TC_Dashboard_01: Verify the dashboard management test case', ()=>{
+    it('TC_DASH_01: Verify Dashboard Searching Filter Functionality', ()=>{
         dashboardObj.clickOnDashboardManagement()
         dashboardObj.clickOnDashboardManagementFilterMenu()
         dashboardObj.enterTheDashboardSearchName(dashboardManagementData.searchByBatchName)
@@ -22,8 +18,13 @@ describe('Execuation the Dashboard Management', () =>{
         dashboardObj.enterTheDashboardCountry(dashboardManagementData.countryName)
         dashboardObj.enterTheDashboardAccountAddress(dashboardManagementData.accountAddress)
         dashboardObj.clickOnDashboardApplyBtn()
+        cy.wait(2000)
         cy.log('Verify that dashboard filter functionality')
-        cy.wait(1000)
+
+    })
+
+    it('TC_DASH_02: Verify Dashboard Export File Download Functionality', () =>{
+        dashboardObj.clickOnDashboardManagement()
         dashboardObj.clickOnDashboardExportFile()
         cy.wait(1000)
         dashboardObj.verifyDashboardExportFile()
@@ -37,22 +38,7 @@ describe('Execuation the Dashboard Management', () =>{
         }); 
         // dashboardObj.downloadDashboardFile()
         // cy.wait(2000)
-
     })
-
-    /*
-    afterEach('Logout', () =>{
-        loginObj.clickOnburgerMenu()
-        loginObj.clickOnLogout()
-        cy.log('User logged out successfully')
-     })
-
-    after('Close Application', () =>{
-        cy.log('Application closed successfully')
-        cy.clearCookies();
-        cy.clearLocalStorage();
-     })
-    */
 
 })
 

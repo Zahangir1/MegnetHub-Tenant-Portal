@@ -1,13 +1,4 @@
-import { loginPage } from '../../pages/login/loginPage'
-const loginObj = new loginPage()
-import loginData from '../../fixtures/loginData.json'
-
-import { uidManagementPage } from '../../pages/uidManagement/uidManagementPage'
-const uidObj = new uidManagementPage()
-import uidManagementData from '../../fixtures/uidManagementData.json'
-
-
-describe('Verify UID Management page loads & UID create successfully.', () =>{
+describe('Verify UID Management Page Load & UID Creation Functionality.', () =>{
     beforeEach('TC_Login: Verify user can login successfully with valid username and password.', () => {
         loginObj.loginURL()
         cy.viewport(1440,900)
@@ -60,3 +51,10 @@ describe('Verify UID Management page loads & UID create successfully.', () =>{
 })
 
 
+import { loginPage } from '../../pages/login/loginPage'
+const loginObj = new loginPage()
+import loginData from '../../fixtures/loginData.json'
+
+import { uidManagementPage } from '../../pages/uidManagement/uidManagementPage'
+const uidObj = new uidManagementPage()
+import uidManagementData from '../../fixtures/uidManagementData.json'
