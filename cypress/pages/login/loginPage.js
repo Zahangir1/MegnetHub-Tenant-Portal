@@ -7,8 +7,8 @@
         loginbtn: 'button[color="primary"][type="submit"] span[class="mat-button-wrapper"]',
         wrongCredentials: '.login-error-message',
         assertLogin: 'h1[class="inter-bold m-0"]',
-        profileMenu: "span[class='mat-button-wrapper'] div[fxlayout='row']",
-        logout: 'body > div:nth-child(6) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(4) > span:nth-child(2)'
+        profileMenu: '.username.mr-12.ml-8',
+        logout: 'button:nth-child(4)'
     }
 
     loginURL(){

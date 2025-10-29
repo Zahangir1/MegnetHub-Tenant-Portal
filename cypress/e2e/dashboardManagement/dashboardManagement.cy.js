@@ -11,7 +11,7 @@ describe('Execuation the Dashboard Management', () =>{
         cy.wait(3000)
     })
 
-    it('TC1_Dashboard: Verify the dashboard management test case', ()=>{
+    it('TC_Dashboard_01: Verify the dashboard management test case', ()=>{
         dashboardObj.clickOnDashboardManagement()
         dashboardObj.clickOnDashboardManagementFilterMenu()
         dashboardObj.enterTheDashboardSearchName(dashboardManagementData.searchByBatchName)
@@ -22,6 +22,7 @@ describe('Execuation the Dashboard Management', () =>{
         dashboardObj.enterTheDashboardCountry(dashboardManagementData.countryName)
         dashboardObj.enterTheDashboardAccountAddress(dashboardManagementData.accountAddress)
         dashboardObj.clickOnDashboardApplyBtn()
+        cy.log('Verify that dashboard filter functionality')
         cy.wait(1000)
         dashboardObj.clickOnDashboardExportFile()
         cy.wait(1000)
