@@ -1,14 +1,24 @@
 describe('Verify UID Management Page Load & UID Creation Functionality.', () =>{
-    beforeEach('TC_Login: Verify user can login successfully with valid username and password.', () => {
-        loginObj.loginURL()
-        cy.viewport(1440,900)
-        loginObj.enterCredentials(loginData.email, loginData.password)
-        cy.log('User logged in successfully')
-        cy.wait(3000)
+    beforeEach('TC_Login: Verify Login to the system with valid credentials.', () => {
+        cy.session('login', () =>{
+            cy.viewport(1440,900)
+            cy.clearCookies()
+            cy.clearLocalStorage()
+            loginObj.loginURL('/login')
+            cy.wait(2000)
+            loginObj.enterEmail(loginData.email)
+            loginObj.enterPassword(loginData.password)
+            loginObj.clickOnLoginBtn()
+            cy.log('User logged in successfully')
+            cy.wait(2000)
+        })
     })
 
     it('TC_UID_01: Verify user can generate new UID.', ()=>{
-        uidObj.clickOnUidManagementModule()
+        cy.viewport(1440,900)
+        loginObj.loginURL('/uid-management')
+        cy.wait(3000)
+        uidObj.clickOnUIDManagement()
         uidObj.verifyUIDManagement()  
         uidObj.clickOnGenerated1()
         uidObj.clickOnGenerateUid()
@@ -21,7 +31,10 @@ describe('Verify UID Management Page Load & UID Creation Functionality.', () =>{
     })
 
     it('TC_UID_02: Verify user can create new Reserved UID', ()=>{
-        uidObj.clickOnUidManagementModule()
+        cy.viewport(1440,900)
+        loginObj.loginURL('/uid-management')
+        cy.wait(3000)
+        uidObj.clickOnUIDManagement()
         uidObj.clickOnReservedTab()
         uidObj.clickOnReservedUid()
         uidObj.setReserveNumberOfUid(uidManagementData.reserveNumberofUids)
@@ -30,7 +43,10 @@ describe('Verify UID Management Page Load & UID Creation Functionality.', () =>{
     })
 
     it('TC_UID_03: Verify that user can search for a UID.', () =>{
-        uidObj.clickOnUidManagementModule()
+        cy.viewport(1440,900)
+        loginObj.loginURL('/uid-management')
+        cy.wait(3000)
+        uidObj.clickOnUIDManagement()
         uidObj.verifyUIDManagement()  
         uidObj.clickOnGenerated2()
         uidObj.clickOnSearchByGeneratedFilter()
@@ -40,7 +56,10 @@ describe('Verify UID Management Page Load & UID Creation Functionality.', () =>{
     })
 
     it('TC_UID_04: Verify the UID export file is download successfully.', () =>{
-        uidObj.clickOnUidManagementModule()
+        cy.viewport(1440,900)
+        loginObj.loginURL('/uid-management/create-uid/uid-generation-list')
+        cy.wait(3000)
+        uidObj.clickOnUIDManagement()
         uidObj.verifyUIDManagement()  
         uidObj.clickOnNumberofUIDs()
         uidObj.verifyUIDGeneration()

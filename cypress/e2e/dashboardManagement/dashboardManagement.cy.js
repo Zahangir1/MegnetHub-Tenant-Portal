@@ -1,13 +1,23 @@
 describe('Verify Dashboard Management page load & Dashboard Export Functionality', () =>{
-    beforeEach('Login Credentials', () =>{
-        loginObj.loginURL()
-        cy.viewport(1440,900)
-        loginObj.enterCredentials(loginData.email, loginData.password)
-        cy.log('User logged in successfully')
-        cy.wait(3000)
+     beforeEach('TC_Login: Verify Login to the system with valid credentials.', () => {
+        cy.session('login', () =>{
+            cy.viewport(1440,900)
+            cy.clearCookies()
+            cy.clearLocalStorage()
+            loginObj.loginURL('/login')
+            cy.wait(2000)
+            loginObj.enterEmail(loginData.email)
+            loginObj.enterPassword(loginData.password)
+            loginObj.clickOnLoginBtn()
+            cy.log('User logged in successfully')
+            cy.wait(2000)
+        })
     })
 
     it('TC_DASH_01: Verify Dashboard Searching Filter Functionality', ()=>{
+        cy.viewport(1440,900)
+        loginObj.loginURL('/dashboard-management')
+        cy.wait(3000)
         dashboardObj.clickOnDashboardManagement()
         dashboardObj.clickOnDashboardManagementFilterMenu()
         dashboardObj.enterTheDashboardSearchName(dashboardManagementData.searchByBatchName)
@@ -24,6 +34,9 @@ describe('Verify Dashboard Management page load & Dashboard Export Functionality
     })
 
     it('TC_DASH_02: Verify Dashboard Export File Download Functionality', () =>{
+        cy.viewport(1440,900)
+        loginObj.loginURL('/dashboard-management')
+        cy.wait(3000)
         dashboardObj.clickOnDashboardManagement()
         dashboardObj.clickOnDashboardExportFile()
         cy.wait(1000)
@@ -31,10 +44,11 @@ describe('Verify Dashboard Management page load & Dashboard Export Functionality
         dashboardObj.clickOnNotificationCardClose()
         cy.wait(1000)
         cy.origin('https://yopmail.com', () => {
-            cy.visit('https://yopmail.com');
+            cy.wait(1000)
+            cy.visit('https://yopmail.com')
             // Interact with elements on yopmail.com
-            cy.get('input[name="login"]').type('tu@yopmail.com');
-            cy.get('button[title="Check Inbox @yopmail.com"]').click();
+            cy.get('input[name="login"]').type('tu@yopmail.com')
+            cy.get('button[title="Check Inbox @yopmail.com"]').click()
         }); 
         // dashboardObj.downloadDashboardFile()
         // cy.wait(2000)

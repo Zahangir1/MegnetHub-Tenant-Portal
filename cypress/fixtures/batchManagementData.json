@@ -1,0 +1,24 @@
+{
+    "batchName": "E-commerce site Batch",
+    "createdPerson": "Tenant User",
+    "uid": "K4ZtNDbK2DPgkm8_",
+    "verificationUrl": "https://magnethub.selisestage.com/verify/K4ZtNDbK2DPgkm8_",
+    "serial": "90",
+    "createdTempName": "Test Black Cherry",
+    "assignPWAname": "Black Cherry - Waterloo Sparkling Water",
+    "searchTemplateName": "Test Black Cherry",
+    "searchCreatedPerson": "Tenant User",
+    "createBatchName": "Black Cherry Waterloo",
+    "assignBatchTemplateName": "Test Black Cherry",
+    "quanity": "10",
+    "assignCertificateName": "ICMP Certificate",
+    "lotNumber": "LOT-100",
+    "articleNumber": "EAN-100",
+    "dateOfManufacturing": "2025",
+    "expireMonth": "6",
+    "tokenInitiatorName": "Zahangir",
+    "unitOfMeasurment": "1",
+    "tokenPerUid": "100",
+    "tokenBufferAmount": "100"
+
+}

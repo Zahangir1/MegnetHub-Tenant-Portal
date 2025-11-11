@@ -1,9 +1,10 @@
 export class uidManagementPage{
 
     weblocators = {
-
         // UID Generation Form Create
-        uidManagement:':nth-child(2) > .mat-ripple > .nav-link-title',
+        sideNavBar: '#sidenav-bar',
+        navLink: 'a[class="mat-ripple nav-link ng-star-inserted"]',
+        uidManagementModule: 'a[class="mat-ripple nav-link ng-star-inserted"] span[class="nav-link-title ng-star-inserted"]',
         assertUIDManagement: '.text-bold',
         generated: '#mat-tab-label-0-0',
         generateUid: '.font-inter',
@@ -35,8 +36,15 @@ export class uidManagementPage{
     }
 
 
-    clickOnUidManagementModule(){
-        cy.get(this.weblocators.uidManagement).should('be.visible').click()
+    clickOnUIDManagement(navbar){
+        cy.get(this.weblocators.sideNavBar).click({ force: true })
+            cy.get(this.weblocators.navLink).should('have.length', '8')
+            cy.get(this.weblocators.navLink).each(($el) => {
+                if ($el.text().trim() === navbar) {
+                    cy.wrap($el).should('be.visible').click()
+                }   
+            })
+            cy.get(this.weblocators.uidManagementModule).eq(1).should('be.visible').click({force:true})
     }
 
     verifyUIDManagement(){

@@ -23,7 +23,7 @@ module.exports = defineConfig({
   },
 
   env: {
-    loginUrl: "https://magnethub.selisestage.com"
+    loginUrl: "https://magnethub.selisestage.com",
   }
 
 })

@@ -1,7 +1,9 @@
 export class dashboardManagementPage{
 
     weblocators = {
-        dashboardManagement: ':nth-child(1) > .mat-ripple > .nav-link-title',
+        sideNavBar: '#sidenav-bar',
+        navLink: 'a[class="mat-ripple nav-link ng-star-inserted"]',
+        dashboardManagementModule: 'a[class="mat-ripple nav-link ng-star-inserted"] span[class="nav-link-title ng-star-inserted"]',
         dashboardFilterMenu: '.mat-form-field-suffix > .mat-focus-indicator > .mat-button-wrapper > .mat-icon',
         dashboardSearhByName: '[formcontrolname="ScannedBatchName"]',
         dashboardsearchPWA: '[formcontrolname="ScannedPwaName"]',
@@ -22,14 +24,21 @@ export class dashboardManagementPage{
         iframe_onload: 'onloadifinbox()',
         iframe_download: '#ifmail',
         downloadBtn: '#mail > div > table > tbody > tr > td > div:nth-child(2) > div > div > div > div > div > div:nth-child(2) > a > span'
-
+        
 
 
     }
 
 
-    clickOnDashboardManagement(){
-        cy.get(this.weblocators.dashboardManagement).should('be.visible').click()
+    clickOnDashboardManagement(navbar){
+        cy.get(this.weblocators.sideNavBar).click({ force: true })
+            cy.get(this.weblocators.navLink).should('have.length', '8')
+            cy.get(this.weblocators.navLink).each(($el) => {
+                if ($el.text().trim() === navbar) {
+                    cy.wrap($el).should('be.visible').click()
+                }   
+            })
+            cy.get(this.weblocators.dashboardManagementModule).eq(0).should('be.visible').click({force:true})
     }
 
     clickOnDashboardManagementFilterMenu(){
