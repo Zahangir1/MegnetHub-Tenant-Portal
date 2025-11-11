@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       # Run Login Test in each browser in the matrix
-      - name: Run Login Test in ${{ matrix.browser }}
+      - name: Run All Test Case in ${{ matrix.browser }}
         uses: cypress-io/github-action@v6
         with:
           browser: ${{ matrix.browser }}

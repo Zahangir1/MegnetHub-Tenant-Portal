@@ -79,7 +79,7 @@ describe('Verify that the Batch Management page loads & Batch Template create su
         batchObj.selectCertificate(batchManagementData.assignCertificateName)
         cy.wait(1000)
         batchObj.clickOnScrollToAdditionalFiled()
-        cy.wait(2000)
+        cy.wait(4000)
         batchObj.setLotNumber(batchManagementData.lotNumber)
         batchObj.setArticleNumber(batchManagementData.articleNumber)
         //createBatchObj.setDateOfManufacturing(batchManagementData.dateOfManufacturing)
@@ -127,7 +127,6 @@ describe('Verify that the Batch Management page loads & Batch Template create su
         batchObj.clickOndeleteBatch()
         batchObj.clickOnCancelBtn()
         cy.wait(1000)
-        
     })
 
     it('TC_PWA_07: Verify that unassign the PWA first before deleting the Batch', () =>{
