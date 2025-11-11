@@ -26,16 +26,3 @@
 
 // <reference types="cypress-xpath" />
 
-Cypress.Commands.add('loginSession', () => {
-  cy.session('login', () => {
-    cy.visit('/login')
-    loginObj.enterEmail(loginData.email)
-    loginObj.enterPassword(loginData.password)
-    loginObj.clickOnLoginBtn()
-    cy.url().should('not.include', '/login')
-  }, {
-    validate() {
-      cy.getCookie('session_id').should('exist')
-    }
-  })
-})

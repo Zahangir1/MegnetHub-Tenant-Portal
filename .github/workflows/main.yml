@@ -10,7 +10,7 @@ on:
 
 jobs:
   cypress_run:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -21,7 +21,15 @@ jobs:
       # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
-
+      - name: Decrypt large secret
+        run: ./decrypt_secret.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+      # This command is just an example to show your secret being printed
+      # Ensure you remove any print statements of your secrets. GitHub does
+      # not hide secrets that use this workaround.
+      - name: Test printing your secret (Remove this step in production)
+        run: cat $HOME/secrets/my_secret.json
       # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -37,3 +45,36 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: ${{ matrix.browser }}
+            # Install dependencies and run tests
+          command: npm run cypress:run-report # Assuming you have a script for this
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+            name: cypress-html-report
+            path: cypress/reports/html # Adjust path based on your reporter configuration
+
+      - name: Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        if: failure() # Only send on failure
+        with:
+            connection_url: ${{secrets.MAIL_CONNECTION}}
+            server_address: smtp.gmail.com # Or your Outlook SMTP server
+            server_port: 465
+            secure: true
+            username: ${{ secrets.EMAIL_USERNAME }}
+            password: ${{ secrets.EMAIL_PASSWORD }}
+            subject: Github Actions job result
+            body: "Cypress tests failed in workflow run ${{ github.run_id }}. Check the logs for details."
+            to: zasqalead@gmail.com, zahangir.alam@selisegroup.com
+            from: Zahangir Alam
+            html_body: file://README.html
+            cc: saimarais005@gmail.com
+            reply_to: alamzahangir365@gmail.com
+
+
+
+
+
+
+
+

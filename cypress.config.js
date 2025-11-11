@@ -1,29 +1,28 @@
-
+// cypress.config.js
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  // screenshot:true,
-  // video:true,
-  // videoCompression: true,
-  // reporter: 'cypress-mochawesome-reporter',
+    screenshot:true,
+    video:true,
+    videoCompression: true,
+    reporter: 'cypress-mochawesome-reporter',
 
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+          // implement node event listeners here
+          require('cypress-mochawesome-reporter/plugin')(on);
+        },
+        reporter: 'cypress-mochawesome-reporter',
+        reporterOptions: {
+          charts: true, // Enable charts in the report
+          reportPageTitle: 'My Cypress Test Report', // Custom report title
+          embeddedScreenshots: true, // Embed screenshots in the report
+          inlineAssets: true, // Embed all report assets inline
+          saveAllAttempts: false, // Don't save separate reports for retries
+        },
+      },
 
-    },
-  },
-
-  reporter: 'mochawesome',
-  reporterOptions: {
-    reportDir: 'cypress/results',
-    overwrite: false,
-    html: false,
-    json: true,
-  },
-
-  env: {
-    loginUrl: "https://magnethub.selisestage.com",
-  }
-
-})
+      env: {
+        loginUrl: "https://magnethub.selisestage.com",
+      }
+  })
