@@ -19,14 +19,14 @@ jobs:
 
     steps:
       # Checkout the code
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       # Install npm dependencies
       - name: Install npm dependencies
@@ -37,15 +37,41 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: ${{ matrix.browser }}
+        
+      - name: Run Cypress Tests (Production)
+        run: |
+          npx cypress run \
+            --env configFile=prod \
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+
+      - name: Merge Mocha Reports
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/output.json
+          npx marge cypress/reports/output.json --reportDir cypress/reports --inline
+
+      - name: Extract Test Summary
+        id: summary
+        run: |
+          PASSED=$(jq '.stats.passes' cypress/reports/output.json)
+          FAILED=$(jq '.stats.failures' cypress/reports/output.json)
+          PENDING=$(jq '.stats.pending' cypress/reports/output.json)
+          DURATION=$(jq '.stats.duration' cypress/reports/output.json)
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+          echo "failed=$FAILED" >> $GITHUB_OUTPUT
+          echo "pending=$PENDING" >> $GITHUB_OUTPUT
+          echo "duration=$DURATION" >> $GITHUB_OUTPUT
+
             # Install dependencies and run tests
           command: npm run cypress:run-report # Assuming you have a script for this
-      - name: Upload HTML Report
+          
+      - name: Upload HTML Report Artifact
         uses: actions/upload-artifact@v4
         with:
             name: cypress-html-report
-            path: cypress/reports/html # Adjust path based on your reporter configuration
+            path: cypress/reports/*.html # Adjust path based on your reporter configuration
 
-      - name: Send Email Notification
+      - name: Send Email with Cypress HTML Report
         uses: dawidd6/action-send-mail@v3
         if: failure() # Only send on failure
         with:
@@ -53,16 +79,37 @@ jobs:
             server_address: smtp.gmail.com # Or your Outlook SMTP server
             server_port: 465
             secure: true
-            username: ${{ secrets.EMAIL_USERNAME }}
-            password: ${{ secrets.EMAIL_PASSWORD }}
-            subject: Github Actions job result
-            body: "Cypress tests failed in workflow run ${{ github.run_id }}. Check the logs for details."
-            to: zasqalead@gmail.com, zahangir.alam@selisegroup.com
-            from: Zahangir Alam
-            html_body: file://README.html
-            cc: saimarais005@gmail.com
-            reply_to: alamzahangir365@gmail.com
+            username: ${{ secrets.SMTP_USERNAME }}
+            password: ${{ secrets.SMTP_PASSWORD }}
+            subject: "🚀 MagnetHub Automation Test Report"
+            to: ${{ secrets.MAIL_TO }} # zasqalead@gmail.com, zahangir.alam@selisegroup.com
+            from: ${{ secrets.MAIL_FROM }} # Zahangir Alam
+            cc: ${{ secrets.MAIL_CC }} # saimarais005@gmail.com
+            reply_to: ${{ secrets.MAIL_REPLY }} # alamzahangir365@gmail.com
 
+            body: |
+                Hello Team,
+
+                Cypress E2E tests have been executed against the **Stage environment**.
+
+                **Summary:**
+                - ✅ Passed: ${{ steps.summary.outputs.passed }}
+                - ❌ Failed: ${{ steps.summary.outputs.failed }}
+                - ⚠️ Pending: ${{ steps.summary.outputs.pending }}
+                - ⏱ Duration: ${{ steps.summary.outputs.duration }} ms
+
+                Repository: ${{ github.repository }}
+                Commit: ${{ github.sha }}
+                Workflow: ${{ github.workflow }}
+                Run Number: ${{ github.run_number }}
+
+                The full HTML test report is attached below.
+
+
+                Regards,
+                Zahangir
+
+                attachments: cypress/reports/*.html
 
 
 
