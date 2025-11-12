@@ -23,31 +23,25 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Cypress tests in Chrome
-        run: npx cypress run --browser chrome    
-
       # Install npm dependencies
       - name: Install npm dependencies
         run: npm ci
 
-      # # Run Cypress tests in Chrome headless
-      # - name: Run Cypress tests in Chrome (headless)
-      #   run: |
-      #     npx cypress run --browser chrome --headless \
-      #       --env configFile=prod \
-      #       --reporter mochawesome \
-      #       --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
-
-      # Run Cypress tests (production)
-      - name: Run Cypress Tests (Production)
+      # Run Cypress tests in Chrome headless
+      - name: Run Cypress tests in Chrome (headless)
         run: |
-          npx cypress run --headless\
+          npx cypress run --browser chrome --headless \
             --env configFile=prod \
             --reporter mochawesome \
-            --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+            --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
+
+      # # Run Cypress tests (production)
+      # - name: Run Cypress Tests (Production)
+      #   run: |
+      #     npx cypress run --headless\
+      #       --env configFile=prod \
+      #       --reporter mochawesome \
+      #       --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
 
        # Debug: list reports
       - name: Debug Reports
