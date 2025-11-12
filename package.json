@@ -10,7 +10,12 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "Test"
+    "ui-regression": "cypress run --browser chrome --spec cypress/e2e/batchManagement/**.js",
+    "ui-regression-allure": "cypress run --browser chrome --spec cypress/e2e/batchManagement/**.js --env allure=true",
+    "allure:clear": "rm -r allure-results/ allure-report cypress/screenshots || true",
+    "allure:report": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:history": "mv -f allure-report/history allure-results/history && rm -r allure-report || true"
   },
   "dependencies": {
     "aggregate-error": "^3.1.0",
@@ -238,6 +243,8 @@
     "yocto-queue": "^0.1.0"
   },
   "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.41.2",
+    "allure-commandline": "^2.34.1",
     "cypress": "^15.6.0",
     "cypress-mochawesome-reporter": "^4.0.2",
     "mochawesome": "^7.1.4",

@@ -17,86 +17,105 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
         with:
-          node-version: '22'
+          # Your Cypress configuration and commands
+          # For example:
+          command: npm run cypress:run -- --reporter mochawesome --reporter-options 'reportDir=cypress/reports/html,overwrite=false,html=true,json=true'
 
-      # Install npm dependencies
-      - name: Install npm dependencies
-        run: npm ci
-
-      # Run Cypress tests in Chrome headless
-      - name: Run Cypress tests in Chrome (headless)
-        run: |
-          npx cypress run --browser chrome --headless \
-            --env configFile=prod \
-            --reporter mochawesome \
-            --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
-
-      # # Run Cypress tests (production)
-      # - name: Run Cypress Tests (Production)
-      #   run: |
-      #     npx cypress run --headless\
-      #       --env configFile=prod \
-      #       --reporter mochawesome \
-      #       --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
-
-       # Debug: list reports
-      - name: Debug Reports
-        run: ls -lR cypress/reports
-      
-      # Merge Mochawesome JSON reports into one
-      - name: Merge Mocha Reports
-        run: |
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/output.json
-          npx marge cypress/reports/output.json --reportDir cypress/reports --inline
-
-      # Extract summary from merged report
-      - name: Extract Test Summary
-        id: summary
-        run: |
-          PASSED=$(jq '.stats.passes' cypress/reports/output.json)
-          FAILED=$(jq '.stats.failures' cypress/reports/output.json)
-          PENDING=$(jq '.stats.pending' cypress/reports/output.json)
-          DURATION=$(jq '.stats.duration' cypress/reports/output.json)
-          echo "passed=$PASSED" >> $GITHUB_OUTPUT
-          echo "failed=$FAILED" >> $GITHUB_OUTPUT
-          echo "pending=$PENDING" >> $GITHUB_OUTPUT
-          echo "duration=$DURATION" >> $GITHUB_OUTPUT
-
-      # Upload HTML report as artifact    
       - name: Upload HTML Report Artifact
         uses: actions/upload-artifact@v4
         with:
-            name: cypress-html-report
-            path: cypress/reports/*.html
+          name: cypress-html-report
+          path: cypress/reports/html # Adjust path to your report directory
+          retention-days: 30 # Optional: set how long to keep the artifact
+
+
+      # Set up Node.js
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '22'
+
+      # Install npm dependencies
+      # - name: Install npm dependencies
+      #   run: npm ci
+
+      # Run Cypress tests in Chrome headless
+      # - name: Run Cypress tests in Chrome (headless)
+      #   run: |
+      #     npx cypress run --browser chrome --headless \
+      #       --env configFile=prod \
+      #       --reporter mochawesome \
+      #       --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
+
+      # # Run Cypress tests (Stage)
+      # - name: Run Cypress Tests (Stage)
+      #   run: |
+      #     npx cypress run --headless\
+      #       --env configFile=stage \
+      #       --reporter mochawesome \
+      #       --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+
+      #  # Debug: list reports
+      # - name: Debug Reports
+      #   run: ls -lR cypress/reports
+      
+      # # Merge Mochawesome JSON reports into one
+      # - name: Merge Mocha Reports
+      #   run: |
+      #     npx mochawesome-merge cypress/reports/*.json > cypress/reports/output.json
+      #     npx marge cypress/reports/output.json --reportDir cypress/reports --inline
+
+      # # Extract summary from merged report
+      # - name: Extract Test Summary
+      #   id: summary
+      #   run: |
+      #     PASSED=$(jq '.stats.passes' cypress/reports/output.json)
+      #     FAILED=$(jq '.stats.failures' cypress/reports/output.json)
+      #     PENDING=$(jq '.stats.pending' cypress/reports/output.json)
+      #     DURATION=$(jq '.stats.duration' cypress/reports/output.json)
+      #     echo "passed=$PASSED" >> $GITHUB_OUTPUT
+      #     echo "failed=$FAILED" >> $GITHUB_OUTPUT
+      #     echo "pending=$PENDING" >> $GITHUB_OUTPUT
+      #     echo "duration=$DURATION" >> $GITHUB_OUTPUT
+
+      # # Upload HTML report as artifact    
+      # - name: Upload HTML Report Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #       name: cypress-html-report
+      #       path: cypress/reports/*.html
+
 
       # Send Email with summary and HTML report
-      - name: Send Email with Cypress HTML Report
+      - name: Send Email Notification for Cypress HTML Report
+        if: always()
         uses: dawidd6/action-send-mail@v3
         with:
             server_address: smtp.gmail.com
-            server_port: 465
+            server_port: 587 
             username: ${{ secrets.SMTP_USERNAME }}
             password: ${{ secrets.SMTP_PASSWORD }}
-            subject: "MagnetHub Automation Test Report"
+            subject: "MagnetHub Automation Test Result - ${{ job.status }}"
             to: ${{ secrets.MAIL_TO }} # zasqalead@gmail.com, zahangir.alam@selisegroup.com
             from: ${{ secrets.MAIL_FROM }} # Zahangir Alam
-            cc: ${{ secrets.MAIL_CC }} # saimarais005@gmail.com
-            reply_to: ${{ secrets.MAIL_REPLY }} # alamzahangir365@gmail.com
+
 
             body: |
-                Hello Team,
-
+                Hello,
                 Cypress E2E tests have been executed against the **Stage environment**.
+                Your Cypress tests have completed with status: ${{ job.status }}.
+                Please find the HTML report attached as an artifact in the workflow run.
+    
 
                 **Summary:**
                 - Passed: ${{ steps.summary.outputs.passed }}
                 - Failed: ${{ steps.summary.outputs.failed }}
                 - Pending: ${{ steps.summary.outputs.pending }}
                 - Duration: ${{ steps.summary.outputs.duration }} ms
+                
 
                 Repository: ${{ github.repository }}
                 Commit: ${{ github.sha }}

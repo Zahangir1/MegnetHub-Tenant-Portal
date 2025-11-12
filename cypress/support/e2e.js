@@ -17,6 +17,7 @@
 import './commands'
 import 'cypress-real-events/support'
 import 'cypress-mochawesome-reporter/register'
+import '@shelex/cypress-allure-plugin'
 //require('cypress-xpath')
 //import 'cypress-file-upload'
 
