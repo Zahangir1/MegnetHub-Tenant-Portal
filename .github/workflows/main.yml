@@ -17,38 +17,56 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          # Your Cypress configuration and commands
-          # For example:
-          command: npm run cypress:run -- --reporter mochawesome --reporter-options 'reportDir=cypress/reports/html,overwrite=false,html=true,json=true'
-
-      - name: Upload HTML Report Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-html-report
-          path: cypress/reports/html # Adjust path to your report directory
-          retention-days: 30 # Optional: set how long to keep the artifact
-
-
-      # Set up Node.js
+      #   # Set up Node.js
       # - name: Set up Node.js
       #   uses: actions/setup-node@v4
       #   with:
       #     node-version: '22'
 
-      # Install npm dependencies
+      # # Install npm dependencies
       # - name: Install npm dependencies
       #   run: npm ci
 
-      # Run Cypress tests in Chrome headless
-      # - name: Run Cypress tests in Chrome (headless)
+      # # Run Cypress tests (Stage)
+      # - name: Run Cypress Tests (Stage)
       #   run: |
-      #     npx cypress run --browser chrome --headless \
-      #       --env configFile=prod \
+      #     npx cypress run --headless\
+      #       --env configFile=stage \
       #       --reporter mochawesome \
-      #       --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
+      #       --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+
+      # - name: Cypress run
+      #   uses: cypress-io/github-action@v6
+      #   with:
+      #     # Your Cypress configuration and commands
+      #     # For example:
+      #     command: npm run cypress:run -- --reporter mochawesome --reporter-options 'reportDir=cypress/reports/html,overwrite=false,html=true,json=true'
+
+      # - name: Upload HTML Report Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: cypress-html-report
+      #     path: cypress/reports/html # Adjust path to your report directory
+      #     retention-days: 30 # Optional: set how long to keep the artifact
+
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Install npm dependencies
+      - name: Install npm dependencies
+        run: npm ci
+
+      # Run Cypress tests in Chrome headless
+      - name: Run Cypress tests in Chrome (headless)
+        run: |
+          npx cypress run --browser chrome --headless \
+            --env configFile=prod \
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
 
       # # Run Cypress tests (Stage)
       # - name: Run Cypress Tests (Stage)
@@ -59,34 +77,34 @@ jobs:
       #       --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
 
       #  # Debug: list reports
-      # - name: Debug Reports
-      #   run: ls -lR cypress/reports
+      - name: Debug Reports
+        run: ls -lR cypress/reports
       
       # # Merge Mochawesome JSON reports into one
-      # - name: Merge Mocha Reports
-      #   run: |
-      #     npx mochawesome-merge cypress/reports/*.json > cypress/reports/output.json
-      #     npx marge cypress/reports/output.json --reportDir cypress/reports --inline
+      - name: Merge Mocha Reports
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/output.json
+          npx marge cypress/reports/output.json --reportDir cypress/reports --inline
 
       # # Extract summary from merged report
-      # - name: Extract Test Summary
-      #   id: summary
-      #   run: |
-      #     PASSED=$(jq '.stats.passes' cypress/reports/output.json)
-      #     FAILED=$(jq '.stats.failures' cypress/reports/output.json)
-      #     PENDING=$(jq '.stats.pending' cypress/reports/output.json)
-      #     DURATION=$(jq '.stats.duration' cypress/reports/output.json)
-      #     echo "passed=$PASSED" >> $GITHUB_OUTPUT
-      #     echo "failed=$FAILED" >> $GITHUB_OUTPUT
-      #     echo "pending=$PENDING" >> $GITHUB_OUTPUT
-      #     echo "duration=$DURATION" >> $GITHUB_OUTPUT
+      - name: Extract Test Summary
+        id: summary
+        run: |
+          PASSED=$(jq '.stats.passes' cypress/reports/output.json)
+          FAILED=$(jq '.stats.failures' cypress/reports/output.json)
+          PENDING=$(jq '.stats.pending' cypress/reports/output.json)
+          DURATION=$(jq '.stats.duration' cypress/reports/output.json)
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+          echo "failed=$FAILED" >> $GITHUB_OUTPUT
+          echo "pending=$PENDING" >> $GITHUB_OUTPUT
+          echo "duration=$DURATION" >> $GITHUB_OUTPUT
 
       # # Upload HTML report as artifact    
-      # - name: Upload HTML Report Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #       name: cypress-html-report
-      #       path: cypress/reports/*.html
+      - name: Upload HTML Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+            name: cypress-html-report
+            path: cypress/reports/*.html
 
 
       # Send Email with summary and HTML report
